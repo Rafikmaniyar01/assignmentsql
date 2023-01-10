@@ -1,0 +1,192 @@
+
+mysql> create table SalesPeople(
+    -> Snum INT NOT NULL,
+    -> Sname VARCHAR(10) NOT NULL UNIQUE,
+    -> City VARCHAR(10),
+    -> Comm INT,
+    -> PRIMARY KEY(Snum)
+    -> );
+    Query OK, 0 rows affected (1.93 sec)
+
+mysql> SHOW TABLES;
++----------------------+
+| Tables_in_edyodawork |
++----------------------+
+| salespeople          |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into salespeople values(1001,'Peel','London',12); 
+Query OK, 1 row affected (0.24 sec)
+
+mysql> insert into salespeople values(1002,'Serres','Sanjose',13);
+Query OK, 1 row affected (0.13 sec)
+
+mysql> insert into salespeople values(1004,'Motika','London',11),(1007,'Rifikin','Barcelona',15),(1003,'Axelrod','Newyork',10);
+Query OK, 3 rows affected (0.16 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from salespeople;
++------+---------+-----------+------+
+| Snum | Sname   | City      | Comm |
++------+---------+-----------+------+
+| 1001 | Peel    | London    |   12 |
+| 1002 | Serres  | Sanjose   |   13 |
+| 1003 | Axelrod | Newyork   |   10 |
+| 1004 | Motika  | London    |   11 |
+| 1007 | Rifikin | Barcelona |   15 |
++------+---------+-----------+------+
+5 rows in set (0.03 sec)
+
+
+mysql> create table Customers(
+    -> Cnum INT NOT NULL,
+    -> Cname VARCHAR(10),
+    -> City VARCHAR(10) NOT NULL,
+    -> Snum INT NOT NULL,
+    -> PRIMARY KEY(Cnum) ,
+    -> FOREIGN KEY(Snum) REFERENCES salespeople(Snum)
+    -> );
+Query OK, 0 rows affected (0.65 sec)
+mysql> insert into customers values(2001,'Hoffman','London',1001),
+     (2002,'Giovanni','Rome',1003),(2003,'liu','Sanjose',1002),
+     (2004,'Grass','Berlin',1002),(2006,'Clemens','London',1001),
+     (2008,'Cisneros','Sanjose',1007),(2007,'Pereira','Rome',1004);
+Query OK, 7 rows affected (0.07 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from customers;
++------+----------+---------+------+
+| Cnum | Cname    | City    | Snum |
++------+----------+---------+------+
+| 2001 | Hoffman  | London  | 1001 |
+| 2002 | Giovanni | Rome    | 1003 |
+| 2003 | liu      | Sanjose | 1002 |
+| 2004 | Grass    | Berlin  | 1002 |
+| 2006 | Clemens  | London  | 1001 |
+| 2007 | Pereira  | Rome    | 1004 |
+| 2008 | Cisneros | Sanjose | 1007 |
++------+----------+---------+------+
+7 rows in set (0.00 sec)
+
+mysql> create table Orders(
+    -> Onum int not null,
+    -> Amt float(2),
+    -> Odate date,
+    -> Cnum int not null,
+    -> Snum int not null,
+    -> primary key(Onum),
+    -> foreign key(Cnum) references Customers(Cnum),
+    -> foreign key(Snum) references Salespeople(Snum)
+    -> );
+Query OK, 0 rows affected (1.13 sec)
+
+mysql> insert into orders values(3001,18.69, "1990-10-3",2008,1007);
+mysql> insert into orders values(3003,767.19,'1990-10-3',2001,1001);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into orders values(3002,1900.10,'1990-10-3',2007,1004);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into orders values(3005,5160.45,'1990-10-3',2003,1002);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into orders values(3006,1098.16,'1990-10-3',2008,1007);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into orders values(3009,1713.23,'1990-10-4',2002,1003);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into orders values(3007,75.75,'1990-10-4',2004,1002);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into orders values(3008,4273.00,'1990-10-5',2006,1001);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into orders values(3010,1309.95,'1990-10-6',2004,1002);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into orders values(3011,9891.88,'1990-10-6',2006,1001);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from orders;
++------+---------+------------+------+------+
+| Onum | Amt     | Odate      | Cnum | Snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1990-10-03 | 2008 | 1007 |
+| 3002 |  1900.1 | 1990-10-03 | 2007 | 1004 |
+| 3003 |  767.19 | 1990-10-03 | 2001 | 1001 |
+| 3005 | 5160.45 | 1990-10-03 | 2003 | 1002 |
+| 3006 | 1098.16 | 1990-10-03 | 2008 | 1007 |
+| 3007 |   75.75 | 1990-10-04 | 2004 | 1002 |
+| 3008 |    4273 | 1990-10-05 | 2006 | 1001 |
+| 3009 | 1713.23 | 1990-10-04 | 2002 | 1003 |
+| 3010 | 1309.95 | 1990-10-06 | 2004 | 1002 |
+| 3011 | 9891.88 | 1990-10-06 | 2006 | 1001 |
++------+---------+------------+------+------+
+
+ Q.1- Count the number of Salesperson whose name begin with ‘a’/’A’.
+
+mysql> select count(*) from salespeople where Sname like 'a%';
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+
+Q.2- Display all the Salesperson whose all orders worth is more than Rs. 2000.
+mysql> select Sname from salespeople where snum IN
+ (select Snum from orders where Amt>2000);
++--------+
+| Sname  |
++--------+
+| Peel   |
+| Serres |
++--------+
+
+Q.3- Count the number of Salesperson belonging to Newyork.
+mysql> select count(*) from salespeople where city='Newyork';
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+
+Q.4- Display the number of Salespeople belonging to London and belonging to Paris.
+mysql> select count(*) from salespeople where city='london' AND city='paris';
++----------+
+| count(*) |
++----------+
+|        0 |
++----------+
+
+Q.5- Display the number of orders taken by each Salesperson and their date of orders.
+  // question is not defined properly so i write  query for muliple cases 
+
+  mysql> select Sname, Onum,  odate from orders inner join salespeople on Orders.Snum=salespeople.snum;
++---------+------+------------+
+| Sname   | Onum | odate      |
++---------+------+------------+
+| Axelrod | 3009 | 1990-10-04 |
+| Motika  | 3002 | 1990-10-03 |
+| Peel    | 3003 | 1990-10-03 |
+| Peel    | 3008 | 1990-10-05 |
+| Peel    | 3011 | 1990-10-06 |
+| Rifikin | 3001 | 1990-10-03 |
+| Rifikin | 3006 | 1990-10-03 |
+| Serres  | 3005 | 1990-10-03 |
+| Serres  | 3007 | 1990-10-04 |
+| Serres  | 3010 | 1990-10-06 |
++---------+------+------------+
+
+mysql> select Sname, count(Onum), odate from orders inner join salespeople on Orders.Snum=salespeople.snum group by sname ;
++---------+-------------+------------+
+| Sname   | count(Onum) | odate      |
++---------+-------------+------------+
+| Axelrod |           1 | 1990-10-04 |
+| Motika  |           1 | 1990-10-03 |
+| Peel    |           3 | 1990-10-03 |
+| Rifikin |           2 | 1990-10-03 |
+| Serres  |           3 | 1990-10-03 |
++---------+-------------+------------+
+5 rows in set (0.00 sec
